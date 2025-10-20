@@ -1,0 +1,25 @@
+version: "3.8"
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ai_risk_api
+    networks:
+      - ai_risk_net
+    expose:
+      - 8000
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: ai_risk_web
+    ports:
+      - "8080:80"
+    networks:
+      - ai_risk_net
+
+networks:
+  ai_risk_net:

@@ -1,0 +1,52 @@
+name: Deploy AI Risk via Docker Compose (Home Server)
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Add SSH host key
+        run: |
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          ssh-keyscan -p ${{ secrets.VPS_PORT }} ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+
+      - name: Load SSH key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.VPS_SSH_KEY }}
+
+      - name: Build Docker images
+        run: |
+          docker build -t ai-risk-api:latest -f backend/Dockerfile ./backend
+          docker build -t ai-risk-web:latest -f frontend/Dockerfile ./frontend
+
+      - name: Save & upload Docker TARs
+        run: |
+          docker save ai-risk-api:latest > ai-risk-api.tar
+          docker save ai-risk-web:latest > ai-risk-web.tar
+          scp -P ${{ secrets.VPS_PORT }} ai-risk-api.tar ai-risk-web.tar dmitri@${{ secrets.VPS_HOST }}:/tmp/
+
+      - name: Upload project files to server
+        run: |
+          rsync -avz -e "ssh -p ${{ secrets.VPS_PORT }}" \
+            ./ dmitri@${{ secrets.VPS_HOST }}:/home/dmitri/ai-risk
+
+      - name: Load and restart containers on server
+        run: |
+          ssh -p ${{ secrets.VPS_PORT }} dmitri@${{ secrets.VPS_HOST }} << 'EOF'
+            set -e
+            cd ~/ai-risk
+            docker load < /tmp/ai-risk-api.tar
+            docker load < /tmp/ai-risk-web.tar
+            docker compose -f docker-compose.prod.yml up -d
+            rm -f /tmp/ai-risk-api.tar /tmp/ai-risk-web.tar
+          EOF
