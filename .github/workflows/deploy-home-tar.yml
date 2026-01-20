@@ -10,8 +10,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout code (with LFS)
         uses: actions/checkout@v4
+        with:
+          lfs: true
+          fetch-depth: 0
+
+      - name: Ensure Git LFS objects are present
+        run: |
+          git lfs install --local
+          # Pull only the big dataset we need (faster)
+          git lfs pull --include="backend/data/raw/gtd.csv" || true
+          # sanity check
+          if [ -f backend/data/raw/gtd.csv ]; then
+            echo "gtd.csv present, size: $(wc -c < backend/data/raw/gtd.csv) bytes"
+          else
+            echo "WARNING: gtd.csv not found after git lfs pull"
+          fi
 
       - name: Add SSH host key
         run: |
@@ -24,7 +39,7 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.VPS_SSH_KEY }}
 
-      - name: Build Docker images
+      - name: Build Docker images (on runner)
         run: |
           docker build -t ai-risk-api:latest -f backend/Dockerfile ./backend
           docker build -t ai-risk-web:latest -f frontend/Dockerfile ./frontend
@@ -35,18 +50,29 @@ jobs:
           docker save ai-risk-web:latest > ai-risk-web.tar
           scp -P ${{ secrets.VPS_PORT }} ai-risk-api.tar ai-risk-web.tar dmitri@${{ secrets.VPS_HOST }}:/tmp/
 
-      - name: Upload project files to server
+      - name: Upload project files to server (exclude backend/data)
         run: |
           rsync -avz -e "ssh -p ${{ secrets.VPS_PORT }}" \
+            --exclude 'backend/data/' \
+            --exclude 'ai-risk-api.tar' --exclude 'ai-risk-web.tar' \
             ./ dmitri@${{ secrets.VPS_HOST }}:/home/dmitri/ai-risk
+
+      - name: (optional) Upload gtd.csv separately if you want to overwrite server copy
+        if: ${{ always() }}
+        run: |
+          # Если вы хотите, чтобы CI автоматически перезаписал gtd.csv на сервере,
+          # раскомментируйте следующие строки и закомментируйте шаг rsync выше.
+          # scp -P ${{ secrets.VPS_PORT }} backend/data/raw/gtd.csv dmitri@${{ secrets.VPS_HOST }}:/home/dmitri/ai-risk/backend/data/raw/gtd.csv
+          echo "To auto-copy gtd.csv uncomment the scp line in this step."
 
       - name: Load and restart containers on server
         run: |
           ssh -p ${{ secrets.VPS_PORT }} dmitri@${{ secrets.VPS_HOST }} << 'EOF'
             set -e
             cd ~/ai-risk
+            # load the images (they contain real data because we ran git lfs pull before build)
             docker load < /tmp/ai-risk-api.tar
             docker load < /tmp/ai-risk-web.tar
-            docker compose -f docker-compose.prod.yml up -d
+            docker compose -f docker-compose.prod.yml up -d --remove-orphans
             rm -f /tmp/ai-risk-api.tar /tmp/ai-risk-web.tar
           EOF
