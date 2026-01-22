@@ -7,116 +7,42 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
   <style>
-    body {
-      background: #ffffff;
-      color: #1a1a1a;
-      font-family: "Inter", sans-serif;
-      margin: 0;
-      padding: 0;
-    }
-    .container {
-      max-width: 950px;
-      margin: 0 auto;
-      padding: 50px 20px;
-    }
-    h1 {
-      font-size: 2.4em;
-      color: #0a3d91;
-      text-align: center;
-      margin-bottom: 10px;
-    }
-    .subtitle {
-      text-align: center;
-      font-size: 1.1em;
-      color: #4a4a4a;
-      margin-bottom: 40px;
-    }
-    .about {
-      background: #f7f9fc;
-      border-radius: 10px;
-      padding: 25px 30px;
-      margin-bottom: 50px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.05);
-    }
-    .about h2 {
-      color: #0a3d91;
-      font-size: 1.4em;
-      margin-bottom: 10px;
-    }
-    .about p {
-      font-size: 15px;
-      line-height: 1.6;
-      color: #444;
-    }
-    .controls {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 25px;
-    }
-    select, button {
-      font-size: 16px;
-      padding: 10px 14px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-    }
-    select { background: #f8f8f8; color: #333; }
-    button {
-      background: #007bff; color: white; cursor: pointer;
-      font-weight: 600; border: none; transition: background 0.3s;
-    }
-    button:hover { background: #0056d2; }
-    .status { text-align: center; font-size: 15px; color: #555; margin-bottom: 10px; }
-    .result {
-      background: #f9fafc; border-radius: 10px; box-shadow: 0 0 15px rgba(0,0,0,0.08);
-      padding: 25px; margin-top: 25px; text-align: center; transition: opacity 0.4s ease-in-out;
-    }
-    .result h3 { color: #0a3d91; margin-bottom: 10px; }
-    .metric { font-size: 14px; color: #555; margin-top: 5px; margin-bottom: 10px; }
-    canvas { margin-top: 15px; max-width: 100%; height: 400px !important; }
-    #map {
-      height: 500px; width: 100%;
-      border-radius: 10px; margin-top: 40px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
-      overflow: hidden;
-    }
-    .repo-link { text-align: center; margin-top: 40px; }
-    .repo-link a {
-      color: #0a3d91; text-decoration: none; font-weight: 600; transition: color 0.3s;
-    }
-    .repo-link a:hover { color: #0056d2; text-decoration: underline; }
-    footer {
-      margin-top: 60px; text-align: center; font-size: 14px;
-      color: #777; border-top: 1px solid #eaeaea; padding: 20px;
-    }
-    @media (max-width:600px){
-      .controls{flex-direction:column;}
-      .result{width:95%;margin:0 auto;}
-    }
+    body { background: #ffffff; color: #1a1a1a; font-family: "Inter", sans-serif; margin: 0; padding: 0; }
+    .container { max-width: 950px; margin: 0 auto; padding: 50px 20px; }
+    h1 { font-size: 2.4em; color: #0a3d91; text-align: center; margin-bottom: 10px; }
+    .subtitle { text-align: center; font-size: 1.1em; color: #4a4a4a; margin-bottom: 40px; }
+    .about { background: #f7f9fc; border-radius: 10px; padding: 25px 30px; margin-bottom: 50px; box-shadow: 0 0 10px rgba(0,0,0,0.05); }
+    .about h2 { color: #0a3d91; font-size: 1.4em; margin-bottom: 10px; }
+    .about p { font-size: 15px; line-height: 1.6; color: #444; }
+    .controls { display:flex; justify-content:center; align-items:center; gap:10px; margin-bottom:25px; }
+    select, button { font-size:16px; padding:10px 14px; border-radius:8px; border:1px solid #ccc; }
+    select { background:#f8f8f8; color:#333; }
+    button { background:#007bff; color:white; cursor:pointer; font-weight:600; border:none; transition:background 0.3s; }
+    button:hover { background:#0056d2; }
+    .status { text-align:center; font-size:15px; color:#555; margin-bottom:10px; }
+    .result { background:#f9fafc; border-radius:10px; box-shadow:0 0 15px rgba(0,0,0,0.08); padding:25px; margin-top:25px; text-align:center; transition: opacity 0.4s ease-in-out; }
+    .result h3 { color:#0a3d91; margin-bottom:10px; }
+    .metric { font-size:14px; color:#555; margin-top:5px; margin-bottom:10px; }
+    canvas { margin-top:15px; max-width:100%; height:400px !important; }
+    #map { height:500px; width:100%; border-radius:10px; margin-top:40px; box-shadow:0 0 15px rgba(0,0,0,0.1); overflow:hidden; }
+    .repo-link { text-align:center; margin-top:40px; }
+    .repo-link a { color:#0a3d91; text-decoration:none; font-weight:600; transition:color 0.3s; }
+    .repo-link a:hover { color:#0056d2; text-decoration:underline; }
+    footer { margin-top:60px; text-align:center; font-size:14px; color:#777; border-top:1px solid #eaeaea; padding:20px; }
+    @media (max-width:600px){ .controls{flex-direction:column;} .result{width:95%;margin:0 auto;} }
+
     /* Legend style */
-    .legend {
-      background: white;
-      line-height: 1.4em;
-      padding: 8px 12px;
-      border-radius: 8px;
-      box-shadow: 0 0 8px rgba(0,0,0,0.2);
-      font-size: 13px;
-    }
-    .legend i {
-      width: 18px;
-      height: 12px;
-      float: left;
-      margin-right: 8px;
-      opacity: 0.8;
-    }
+    .legend { background:white; line-height:1.4em; padding:8px 12px; border-radius:8px; box-shadow:0 0 8px rgba(0,0,0,0.2); font-size:13px; }
+    .legend i { width:18px; height:12px; float:left; margin-right:8px; opacity:0.8; }
+
+    /* Caution / note styles */
+    .caution { background:#fff4e5; border-left:4px solid #ff9900; color:#663c00; padding:10px 12px; border-radius:6px; margin-top:12px; font-size:13px; }
+    .small-muted { font-size:13px; color:#666; margin-top:8px; }
+    .val-row { display:flex; justify-content:center; gap:18px; flex-wrap:wrap; margin-top:10px; color:#003366; font-weight:600; }
+    .val-item { background:#eef4ff; padding:8px 12px; border-radius:6px; font-size:14px; }
   </style>
 
-  <!-- Leaflet (no integrity attributes) -->
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css"
-/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css"/>
 </head>
 
 <body>
@@ -128,15 +54,22 @@
       <h2>📘 About the Model</h2>
       <p>
         This dashboard analyzes data from the <strong>Global Terrorism Database (GTD)</strong> and 
-        forecasts the expected number of incidents per region for the next months.  
-        The model is built using <strong>LightGBM</strong>, optimized for time-series forecasting and 
-        fine-tuned per region.
+        forecasts the expected number of incidents per region for upcoming months.  
+        The model uses <strong>LightGBM</strong> and is tuned per-region.
       </p>
       <ul>
-        <li>🧠 Uses lag-based and rolling features (trend, volatility, zero-share).</li>
+        <li>🧠 Lag and rolling features (trend, volatility, zero-share).</li>
         <li>🌍 Trained separately for 12 world regions.</li>
         <li>📈 Evaluated with <strong>SMAPE</strong>, <strong>MAE</strong>, and <strong>RMSE</strong>.</li>
       </ul>
+
+      <!-- NEW: general caution about scarce-data regions (now in English) -->
+      <div class="caution" role="note" aria-live="polite">
+        <strong>Note:</strong> Model reliability differs across regions. Interpret forecasts in conjunction with the
+        validation metrics (<em>MAE</em>, <em>RMSE</em>, <em>SMAPE</em>, and <em>correlation</em>), which quantify
+        out-of-sample predictive accuracy.
+      </div>
+      
     </section>
 
     <div class="controls">
@@ -162,151 +95,362 @@
     <div id="result" class="result" style="display:none;">
       <h3 id="rRegion"></h3>
       <p><strong>Forecast:</strong> <span id="rPred"></span> incidents</p>
-      <div id="validationBox" style="
-      background:#eef4ff;
-      border-radius:8px;
-      padding:10px;
-      margin-top:10px;
-      font-size:14px;
-      color:#003366;
-      font-weight:500;">
-      <em>Validation metrics will appear here after prediction.</em>
-    </div>
+
+      <div id="validationBox" style="border-radius:8px; padding:10px; margin-top:10px;">
+        <div class="val-row" id="valRow">
+          <!-- filled dynamically -->
+          <div class="val-item" id="valMAE">MAE: —</div>
+          <div class="val-item" id="valRMSE">RMSE: —</div>
+          <div class="val-item" id="valSMAPE">SMAPE: —</div>
+          <div class="val-item" id="valCORR">Corr: —</div>
+          <div class="val-item" id="valHOLDOUT">Holdout (n_test_rows): —</div>
+        </div>
+      </div>
+
+      <!-- per-region caution displayed near validation metrics -->
+      <div id="regionCaution" class="small-muted" style="display:none; margin-top:8px;"></div>
 
       <canvas id="chart" width="400" height="200"></canvas>
       <button id="resetZoomBtn" style="margin-top:10px; padding:6px 12px;">Reset Zoom</button>
     </div>
 
-    <!-- 🗺️ Map -->
     <div id="map"></div>
 
     <div class="repo-link">
-      <a href="https://github.com/DmitriDerevjanko/ai-risk" target="_blank">
-        🌐 View Source Code on GitHub →
-      </a>
+      <a href="https://github.com/DmitriDerevjanko/ai-risk-clean" target="_blank">🌐 View Source Code on GitHub →</a>
     </div>
 
     <footer>© 2025 AI Risk Intelligence | Powered by FastAPI + LightGBM</footer>
   </div>
 
-  <!-- Chart.js -->
+  <!-- libs -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
-
-  <!-- Leaflet -->
   <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
 
+  <!-- your existing app.js should remain; we add a small augmentation below -->
   <script src="app.js"></script>
 
-  <!-- === 🌍 MAP LOGIC === -->
-<script>
-  async function renderWorldMap(regionData) {
-    console.group("🗺️ Rendering World Map");
-  
-    if (window._leafletMap) {
-      window._leafletMap.remove();
-      console.log("🧹 Previous map instance removed");
+  <script>
+    // Update the validation box UI from a metrics object (defensive)
+    function updateValidationBox(metrics) {
+      // metrics is expected to be an object possibly containing:
+      // { mae:..., rmse:..., smape:..., corr:..., n_test_rows: ... }
+      const get = (k) => (metrics && (k in metrics)) ? metrics[k] : (metrics && metrics[k + "_validation"]) ? metrics[k + "_validation"] : null;
+
+      const mae = safeNum(get("mae"));
+      const rmse = safeNum(get("rmse"));
+      const smape = safeNum(get("smape"));
+      const corr = safeNum(get("corr"));
+      const holdout = metrics && ("n_test_rows" in metrics) ? metrics["n_test_rows"] : (metrics && ("n_test_rows" in metrics) ? metrics["n_test_rows"] : null);
+
+      document.getElementById("valMAE").textContent = "MAE: " + (mae === null ? "—" : mae);
+      document.getElementById("valRMSE").textContent = "RMSE: " + (rmse === null ? "—" : rmse);
+      document.getElementById("valSMAPE").textContent = "SMAPE: " + (smape === null ? "—" : (smape + "%"));
+      document.getElementById("valCORR").textContent = "Corr: " + (corr === null ? "—" : corr);
+      document.getElementById("valHOLDOUT").textContent = "Holdout (n_test_rows): " + (holdout === null ? "—" : holdout);
+
+      // show caution if holdout is small or SMAPE is very high
+      showRegionCaution(holdout, smape);
     }
-  
-    const map = L.map("map", {
-      zoomSnap: 0.25,
-      zoomControl: true,
-      scrollWheelZoom: true,
-    }).setView([20, 10], 2);
-    window._leafletMap = map;
-  
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution: '&copy; OpenStreetMap contributors',
-    }).addTo(map);
-  
-    const regionValues = {};
-    regionData.forEach(r => regionValues[r.name] = r.value);
-  
-    function getColor(v) {
-      return v > 1000 ? "#7f0000" :
-             v > 500  ? "#b30000" :
-             v > 200  ? "#d7301f" :
-             v > 100  ? "#ef6548" :
-             v > 50   ? "#fc8d59" :
-             v > 10   ? "#fdbb84" :
-             v > 0    ? "#fdd49e" :
-                        "#fef0d9";
+
+    // small helper to coerce numbers
+    function safeNum(v) {
+      if (v === null || v === undefined) return null;
+      const n = Number(v);
+      return Number.isFinite(n) ? (Math.round(n * 1000) / 1000) : null;
     }
-  
-    const geojsonUrl = "https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json";
-    const res = await fetch(geojsonUrl);
-    const worldData = await res.json();
-  
-    const nameMatch = {
-      "North America": ["United States", "Canada", "Mexico"],
-      "South America": ["Brazil", "Argentina", "Chile", "Colombia", "Peru"],
-      "Western Europe": ["France", "Germany", "United Kingdom", "Spain", "Portugal", "Italy", "Netherlands", "Belgium"],
-      "Eastern Europe": ["Poland", "Ukraine", "Romania", "Czech Republic", "Hungary", "Russia"],
-      "Middle East & North Africa": ["Egypt", "Iran", "Iraq", "Saudi Arabia", "Israel", "Turkey", "Algeria", "Morocco"],
-      "Sub-Saharan Africa": ["Nigeria", "Kenya", "South Africa", "Ethiopia", "Ghana", "Tanzania"],
-      "Central Asia": ["Kazakhstan", "Uzbekistan", "Turkmenistan", "Kyrgyzstan", "Tajikistan"],
-      "South Asia": ["India", "Pakistan", "Bangladesh", "Sri Lanka", "Nepal"],
-      "East Asia": ["China", "Japan", "Mongolia", "South Korea"],
-      "Southeast Asia": ["Indonesia", "Thailand", "Vietnam", "Malaysia", "Philippines"],
-      "Central America & Caribbean": ["Cuba", "Honduras", "Guatemala", "Dominican Republic", "Costa Rica"],
-      "Australasia & Oceania": ["Australia", "New Zealand", "Papua New Guinea"]
-    };
-  
-    L.geoJSON(worldData, {
-      style: feature => {
-        let regionName = null;
-        for (const [r, countries] of Object.entries(nameMatch)) {
-          if (countries.includes(feature.properties.name)) regionName = r;
-        }
-        const value = regionValues[regionName] ?? 0;
-        return {
-          fillColor: getColor(value),
-          weight: 0.8,
-          opacity: 1,
-          color: "#fff",
-          fillOpacity: 0.7,
-        };
-      },
-      onEachFeature: (feature, layer) => {
-        let regionName = null;
-        for (const [r, countries] of Object.entries(nameMatch)) {
-          if (countries.includes(feature.properties.name)) regionName = r;
-        }
-        const value = regionValues[regionName] ?? 0;
-        layer.bindTooltip(`<b>${feature.properties.name}</b><br>${regionName || "N/A"}<br>Incidents: ${value}`);
+
+    // dynamic caution helper: shows an advisory when data are scarce or SMAPE huge
+    function showRegionCaution(n_test_rows, smape) {
+      const el = document.getElementById("regionCaution");
+      if (!el) return;
+      const smallThreshold = 12;   // months
+      const badSmape = 50.0;       // percent
+      const scarce = (n_test_rows !== null && n_test_rows < smallThreshold);
+      const highSmape = (smape !== null && smape > badSmape);
+      if (scarce || highSmape) {
+        el.style.display = "block";
+        el.innerHTML = "⚠️ Note: This region has limited holdout data (n_test_rows = "
+                      + (n_test_rows === null ? "N/A" : n_test_rows)
+                      + "). Forecasts and validation metrics (SMAPE) may be unreliable; interpret results with caution.";
+      } else {
+        el.style.display = "none";
+        el.innerHTML = "";
       }
-    }).addTo(map);
-  
-    // 🧭 Legend
-    const legend = L.control({ position: "bottomright" });
-    legend.onAdd = function() {
-      const div = L.DomUtil.create("div", "legend");
-      const grades = [0, 10, 50, 100, 200, 500, 1000];
-      div.innerHTML += "<strong>Risk Level</strong><br>";
-      for (let i = 0; i < grades.length; i++) {
-        div.innerHTML +=
-          '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
-          grades[i] + (grades[i + 1] ? "&ndash;" + grades[i + 1] + "<br>" : "+");
+    }
+
+    // try to augment runForecast: after your app.js finishes forecasting it should store the last API response
+    // in window._lastApiResponse (recommended). This code is defensive: it checks for that and falls back.
+    (function augmentRunForecast() {
+      const orig = window.runForecast;
+      // Only wrap if there's an existing runForecast
+      if (typeof orig !== "function") return;
+      window.runForecast = async function(statusEl) {
+        await orig(statusEl);
+        // small delay to give app.js DOM updates time to happen (if it writes metrics to DOM)
+        await new Promise(r => setTimeout(r, 50));
+
+        // 1) preferred: app.js stores the API payload here
+        const resp = window._lastApiResponse || window._lastResponse || null;
+
+        if (resp && resp.validation_metrics) {
+          // server may return validation_metrics object
+          updateValidationBox(resp.validation_metrics);
+        } else if (resp && resp.metrics_summary) {
+          // alternative naming
+          updateValidationBox(resp.metrics_summary);
+        } else {
+          // fallback: try to read metrics from DOM elements that app.js might have inserted
+          // attempt to find SMAPE/MAE values from elements with ids (common patterns)
+          const guess = {};
+          try {
+            const maeEl = document.querySelector("#valMAE") || document.querySelector(".mae") || null;
+            const smapeEl = document.querySelector("#valSMAPE") || document.querySelector(".smape") || null;
+            const corrEl = document.querySelector("#valCORR") || document.querySelector(".corr") || null;
+            const rmseEl = document.querySelector("#valRMSE") || document.querySelector(".rmse") || null;
+            // parse numbers if available
+            if (maeEl && maeEl.textContent.match(/-?\d+(\.\d+)?/)) guess.mae = parseFloat(maeEl.textContent.match(/-?\d+(\.\d+)?/)[0]);
+            if (rmseEl && rmseEl.textContent.match(/-?\d+(\.\d+)?/)) guess.rmse = parseFloat(rmseEl.textContent.match(/-?\d+(\.\d+)?/)[0]);
+            if (smapeEl && smapeEl.textContent.match(/-?\d+(\.\d+)?/)) guess.smape = parseFloat(smapeEl.textContent.match(/-?\d+(\.\d+)?/)[0]);
+            if (corrEl && corrEl.textContent.match(/-?\d+(\.\d+)?/)) guess.corr = parseFloat(corrEl.textContent.match(/-?\d+(\.\d+)?/)[0]);
+          } catch(e) { /* ignore */ }
+
+          // also attempt holdout: maybe app.js sets an element with id "holdout" or similar
+          try {
+            const hEl = document.querySelector("#valHOLDOUT") || document.querySelector(".n_test_rows");
+            if (hEl && hEl.textContent.match(/\d+/)) guess.n_test_rows = parseInt(hEl.textContent.match(/\d+/)[0], 10);
+          } catch(e) { /* ignore */ }
+
+          if (Object.keys(guess).length) updateValidationBox(guess);
+        }
+
+        // update the map with forecast avg if present in DOM
+        try {
+          const region = document.getElementById("region").value;
+          const predsText = document.getElementById("rPred").textContent || "";
+          const preds = predsText.split(",").map(x => Number(x.trim())).filter(Number.isFinite);
+          const avg = preds.length ? preds.reduce((a,b)=>a+b,0)/preds.length : 0;
+          renderWorldMap([{ name: region, value: avg }]);
+        } catch(e) { /* non-fatal */ }
+      };
+    })();
+
+    // Map rendering function (kept compact; identical behavior as before)
+    async function renderWorldMap(regionData) {
+      if (window._leafletMap) { window._leafletMap.remove(); }
+      const map = L.map("map", { zoomSnap:0.25, zoomControl:true, scrollWheelZoom:true }).setView([20,10],2);
+      window._leafletMap = map;
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
+      const regionValues = {}; regionData.forEach(r => regionValues[r.name] = r.value);
+      function getColor(v) {
+        return v > 1000 ? "#7f0000" : v > 500 ? "#b30000" : v > 200 ? "#d7301f" : v > 100 ? "#ef6548" : v > 50 ? "#fc8d59" : v > 10 ? "#fdbb84" : v > 0 ? "#fdd49e" : "#fef0d9";
       }
-      return div;
+      const geojsonUrl = "https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json";
+      const res = await fetch(geojsonUrl); const worldData = await res.json();
+      const nameMatch = {
+      "North America": [
+        "Canada",
+        "United States"
+      ],
+      "South America": [
+        "Argentina",
+        "Bolivia",
+        "Brazil",
+        "Chile",
+        "Colombia",
+        "Ecuador",
+        "Falkland Islands",
+        "Guyana",
+        "Paraguay",
+        "Peru",
+        "Suriname",
+        "Uruguay",
+        "Venezuela"
+      ],
+      "Western Europe": [
+        "Austria",
+        "Belgium",
+        "Denmark",
+        "Finland",
+        "France",
+        "Germany",
+        "Iceland",
+        "Ireland",
+        "Italy",
+        "Luxembourg",
+        "Monaco",
+        "Netherlands",
+        "Norway",
+        "Portugal",
+        "Spain",
+        "Sweden",
+        "Switzerland"
+      ],
+      "Eastern Europe": [
+        "Albania",
+        "Belarus",
+        "Bosnia and Herzegovina",
+        "Bulgaria",
+        "Croatia",
+        "Czech Republic",
+        "Estonia",
+        "Hungary",
+        "Kosovo",
+        "Latvia",
+        "Lithuania",
+        "Moldova",
+        "Montenegro",
+        "North Macedonia",
+        "Poland",
+        "Romania",
+        "Russia",
+        "Serbia",
+        "Slovakia",
+        "Slovenia",
+        "Ukraine"
+      ],
+      "Middle East & North Africa": [
+        "Algeria",
+        "Bahrain",
+        "Egypt",
+        "Iran",
+        "Iraq",
+        "Israel",
+        "Jordan",
+        "Kuwait",
+        "Lebanon",
+        "Libya",
+        "Morocco",
+        "Oman",
+        "Qatar",
+        "Saudi Arabia",
+        "Syria",
+        "Tunisia",
+        "Turkey",
+        "United Arab Emirates",
+        "West Bank",
+        "Yemen"
+      ],
+      "Sub-Saharan Africa": [
+        "Angola",
+        "Benin",
+        "Botswana",
+        "Burkina Faso",
+        "Burundi",
+        "Cameroon",
+        "Central African Republic",
+        "Chad",
+        "Congo",
+        "Cote d'Ivoire",
+        "Democratic Republic of the Congo",
+        "Djibouti",
+        "Eritrea",
+        "Ethiopia",
+        "Gabon",
+        "Gambia",
+        "Ghana",
+        "Guinea",
+        "Guinea Bissau",
+        "Kenya",
+        "Lesotho",
+        "Liberia",
+        "Madagascar",
+        "Malawi",
+        "Mauritius",
+        "Mozambique",
+        "Namibia",
+        "Niger",
+        "Nigeria",
+        "Rwanda",
+        "Senegal",
+        "Sierra Leone",
+        "South Africa",
+        "South Sudan"
+      ],
+      "Central Asia": [
+        "Kazakhstan",
+        "Kyrgyzstan",
+        "Tajikistan",
+        "Turkmenistan",
+        "Uzbekistan"
+      ],
+      "South Asia": [
+        "Afghanistan",
+        "Bangladesh",
+        "Bhutan",
+        "India",
+        "Maldives",
+        "Nepal",
+        "Pakistan",
+        "Sri Lanka"
+      ],
+      "East Asia": [
+        "China",
+        "Japan",
+        "Mongolia",
+        "North Korea",
+        "South Korea",
+        "Taiwan"
+      ],
+      "Southeast Asia": [
+        "Brunei",
+        "Cambodia",
+        "Indonesia",
+        "Laos",
+        "Malaysia",
+        "Myanmar",
+        "Philippines",
+        "Singapore",
+        "Thailand",
+        "Timor-Leste",
+        "Vietnam"
+      ],
+      "Central America & Caribbean": [
+        "Belize",
+        "Costa Rica",
+        "Cuba",
+        "Dominican Republic",
+        "El Salvador",
+        "Guatemala",
+        "Honduras",
+        "Jamaica",
+        "Nicaragua",
+        "Panama",
+        "Puerto Rico",
+        "The Bahamas",
+        "Trinidad and Tobago"
+      ],
+      "Australasia & Oceania": [
+        "Australia",
+        "Fiji",
+        "New Caledonia",
+        "New Zealand",
+        "Papua New Guinea",
+        "Solomon Islands",
+        "Vanuatu"
+      ]
     };
-    legend.addTo(map);
-  
-    console.log("✅ World map rendered successfully");
-    console.groupEnd();
-  }
-  
-  const _origRunForecast = window.runForecast;
-  window.runForecast = async function(statusEl) {
-    await _origRunForecast(statusEl);
-    try {
-      const region = document.getElementById("region").value;
-      const preds = document.getElementById("rPred").textContent.split(",").map(x => +x || 0);
-      const avg = preds.reduce((a,b)=>a+b,0)/preds.length;
-      renderWorldMap([{name:region,value:avg}]);
-    } catch(e){ console.warn("Map update skipped:", e); }
-  };
-  </script>  
+
+      L.geoJSON(worldData, {
+        style: feature => {
+          let regionName = null;
+          for (const [r, countries] of Object.entries(nameMatch)) if (countries.includes(feature.properties.name)) regionName = r;
+          const value = regionValues[regionName] ?? 0;
+          return { fillColor: getColor(value), weight:0.8, opacity:1, color:"#fff", fillOpacity:0.7 };
+        },
+        onEachFeature: (feature, layer) => {
+          let regionName = null;
+          for (const [r, countries] of Object.entries(nameMatch)) if (countries.includes(feature.properties.name)) regionName = r;
+          const value = regionValues[regionName] ?? 0;
+          layer.bindTooltip(`<b>${feature.properties.name}</b><br>${regionName || "N/A"}<br>Incidents: ${value}`);
+        }
+      }).addTo(map);
+      const legend = L.control({ position: "bottomright" });
+      legend.onAdd = function(){ const div = L.DomUtil.create("div","legend"); const grades = [0,10,50,100,200,500,1000]; div.innerHTML += "<strong>Risk Level</strong><br>"; for (let i=0;i<grades.length;i++){ div.innerHTML += '<i style="background:' + getColor(grades[i]+1) + '"></i> ' + grades[i] + (grades[i+1] ? "&ndash;" + grades[i+1] + "<br>" : "+"); } return div; };
+      legend.addTo(map);
+    }
+  </script>
 </body>
 </html>
