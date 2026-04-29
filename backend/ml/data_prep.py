@@ -44,7 +44,6 @@ def to_monthly_by_region(df: pd.DataFrame) -> pd.DataFrame:
     df["date"] = df.apply(safe_date, axis=1)
     df["month"] = df["date"].values.astype("datetime64[M]")
 
-    # Targets
     df["incidents_count"] = 1
     df["casualties"] = df.get("nkill", 0).fillna(0).clip(lower=0)
 
