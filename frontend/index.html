@@ -7,39 +7,293 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
   <style>
-    body { background: #ffffff; color: #1a1a1a; font-family: "Inter", sans-serif; margin: 0; padding: 0; }
-    .container { max-width: 950px; margin: 0 auto; padding: 50px 20px; }
-    h1 { font-size: 2.4em; color: #0a3d91; text-align: center; margin-bottom: 10px; }
-    .subtitle { text-align: center; font-size: 1.1em; color: #4a4a4a; margin-bottom: 40px; }
-    .about { background: #f7f9fc; border-radius: 10px; padding: 25px 30px; margin-bottom: 50px; box-shadow: 0 0 10px rgba(0,0,0,0.05); }
-    .about h2 { color: #0a3d91; font-size: 1.4em; margin-bottom: 10px; }
-    .about p { font-size: 15px; line-height: 1.6; color: #444; }
-    .controls { display:flex; justify-content:center; align-items:center; gap:10px; margin-bottom:25px; }
-    select, button { font-size:16px; padding:10px 14px; border-radius:8px; border:1px solid #ccc; }
-    select { background:#f8f8f8; color:#333; }
-    button { background:#007bff; color:white; cursor:pointer; font-weight:600; border:none; transition:background 0.3s; }
-    button:hover { background:#0056d2; }
-    .status { text-align:center; font-size:15px; color:#555; margin-bottom:10px; }
-    .result { background:#f9fafc; border-radius:10px; box-shadow:0 0 15px rgba(0,0,0,0.08); padding:25px; margin-top:25px; text-align:center; transition: opacity 0.4s ease-in-out; }
-    .result h3 { color:#0a3d91; margin-bottom:10px; }
-    .metric { font-size:14px; color:#555; margin-top:5px; margin-bottom:10px; }
-    canvas { margin-top:15px; max-width:100%; height:400px !important; }
-    #map { height:500px; width:100%; border-radius:10px; margin-top:40px; box-shadow:0 0 15px rgba(0,0,0,0.1); overflow:hidden; }
-    .repo-link { text-align:center; margin-top:40px; }
-    .repo-link a { color:#0a3d91; text-decoration:none; font-weight:600; transition:color 0.3s; }
-    .repo-link a:hover { color:#0056d2; text-decoration:underline; }
-    footer { margin-top:60px; text-align:center; font-size:14px; color:#777; border-top:1px solid #eaeaea; padding:20px; }
-    @media (max-width:600px){ .controls{flex-direction:column;} .result{width:95%;margin:0 auto;} }
+    :root {
+      --ink: #18202f;
+      --muted: #667085;
+      --line: #d9e1ec;
+      --panel: #ffffff;
+      --soft: #f5f7fb;
+      --brand: #1f7a8c;
+      --brand-dark: #155c68;
+      --accent: #d9822b;
+      --danger: #b42318;
+      --shadow: 0 18px 45px rgba(24, 32, 47, 0.09);
+    }
 
-    /* Legend style */
+    * { box-sizing: border-box; }
+
+    body {
+      background:
+        radial-gradient(circle at top left, rgba(31,122,140,0.13), transparent 34rem),
+        linear-gradient(180deg, #f8fafc 0%, #ffffff 45%, #f7f9fc 100%);
+      color: var(--ink);
+      font-family: "Inter", sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 34px 20px 42px;
+    }
+
+    h1 {
+      color: var(--ink);
+      font-size: clamp(30px, 5vw, 56px);
+      line-height: 1;
+      letter-spacing: 0;
+      margin: 8px 0 10px;
+      text-align: center;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 16px;
+      margin: 0 auto 24px;
+      max-width: 720px;
+      text-align: center;
+    }
+
+    .about {
+      background: rgba(255,255,255,0.78);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(24,32,47,0.05);
+      margin: 0 auto 22px;
+      max-width: 920px;
+      padding: 18px 22px;
+    }
+
+    .about h2 {
+      color: var(--ink);
+      font-size: 16px;
+      margin: 0 0 8px;
+    }
+
+    .about p,
+    .about li {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .about ul {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 18px;
+      margin: 10px 0 0;
+      padding-left: 18px;
+    }
+
+    .controls {
+      align-items: center;
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin: 22px auto;
+    }
+
+    select,
+    button {
+      border-radius: 8px;
+      font-size: 15px;
+      min-height: 44px;
+      padding: 10px 14px;
+    }
+
+    select {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      color: var(--ink);
+      min-width: min(360px, 100%);
+    }
+
+    button {
+      background: var(--brand);
+      border: 1px solid var(--brand);
+      color: white;
+      cursor: pointer;
+      font-weight: 700;
+      transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    button:hover {
+      background: var(--brand-dark);
+      box-shadow: 0 10px 22px rgba(31,122,140,0.22);
+      transform: translateY(-1px);
+    }
+
+    .status {
+      color: var(--muted);
+      font-size: 14px;
+      margin: 8px 0 14px;
+      min-height: 20px;
+      text-align: center;
+    }
+
+    .status.ok { color: var(--brand-dark); }
+    .status.error { color: var(--danger); }
+
+    .result {
+      background: rgba(255,255,255,0.94);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      margin-top: 20px;
+      padding: 22px;
+      transition: opacity 0.3s ease-in-out;
+    }
+
+    .result-header {
+      align-items: flex-start;
+      display: flex;
+      gap: 16px;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+
+    .result h3 {
+      color: var(--ink);
+      font-size: 24px;
+      margin: 0 0 4px;
+    }
+
+    .chart-caption {
+      color: var(--muted);
+      font-size: 13px;
+      margin: 0;
+    }
+
+    .summary-grid,
+    .val-row {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .result-header .summary-grid {
+      min-width: min(640px, 100%);
+    }
+
+    .summary-card,
+    .val-item {
+      background: var(--soft);
+      border: 1px solid #e8eef6;
+      border-radius: 8px;
+      min-height: 74px;
+      padding: 12px;
+    }
+
+    .summary-label,
+    .val-label {
+      color: var(--muted);
+      display: block;
+      font-size: 12px;
+      margin-bottom: 7px;
+    }
+
+    .summary-value,
+    .val-value {
+      color: var(--ink);
+      display: block;
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 1.1;
+    }
+
+    .val-row {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      margin-top: 10px;
+    }
+
+    .val-item {
+      min-height: 60px;
+    }
+
+    .val-item {
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .chart-shell {
+      background: linear-gradient(180deg, #ffffff, #f9fbfd);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      margin-top: 16px;
+      padding: 14px;
+    }
+
+    canvas {
+      display: block;
+      height: 520px !important;
+      max-width: 100%;
+    }
+
+    .chart-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 10px;
+    }
+
+    .secondary-button {
+      background: #ffffff;
+      border-color: var(--line);
+      color: var(--ink);
+      min-height: 36px;
+      padding: 7px 12px;
+    }
+
+    .secondary-button:hover {
+      background: #f3f6fa;
+      box-shadow: none;
+    }
+
+    #map {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      height: 500px;
+      margin-top: 28px;
+      overflow: hidden;
+      width: 100%;
+    }
+
+    .repo-link { text-align:center; margin-top:32px; }
+    .repo-link a { color:var(--brand-dark); text-decoration:none; font-weight:700; transition:color 0.2s; }
+    .repo-link a:hover { color:var(--accent); text-decoration:underline; }
+
+    footer {
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 42px;
+      padding: 20px;
+      text-align: center;
+    }
+
     .legend { background:white; line-height:1.4em; padding:8px 12px; border-radius:8px; box-shadow:0 0 8px rgba(0,0,0,0.2); font-size:13px; }
     .legend i { width:18px; height:12px; float:left; margin-right:8px; opacity:0.8; }
 
-    /* Caution / note styles */
-    .caution { background:#fff4e5; border-left:4px solid #ff9900; color:#663c00; padding:10px 12px; border-radius:6px; margin-top:12px; font-size:13px; }
-    .small-muted { font-size:13px; color:#666; margin-top:8px; }
-    .val-row { display:flex; justify-content:center; gap:18px; flex-wrap:wrap; margin-top:10px; color:#003366; font-weight:600; }
-    .val-item { background:#eef4ff; padding:8px 12px; border-radius:6px; font-size:14px; }
+    .caution { background:#fff8ed; border-left:4px solid var(--accent); color:#6d3b00; padding:10px 12px; border-radius:6px; margin-top:12px; font-size:13px; }
+    .small-muted { color:var(--muted); font-size:13px; margin-top:8px; }
+
+    @media (max-width: 860px) {
+      .result-header,
+      .controls { flex-direction: column; }
+      .summary-grid,
+      .val-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      select, button { width: 100%; }
+      canvas { height: 430px !important; }
+    }
+
+    @media (max-width: 560px) {
+      .summary-grid,
+      .val-row { grid-template-columns: 1fr; }
+      .result { padding: 14px; }
+      canvas { height: 360px !important; }
+    }
   </style>
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css"/>
@@ -93,25 +347,53 @@
     <div id="status" class="status">⏳ Waiting for input...</div>
 
     <div id="result" class="result" style="display:none;">
-      <h3 id="rRegion"></h3>
-      <p><strong>Forecast:</strong> <span id="rPred"></span> incidents</p>
+      <div class="result-header">
+        <div>
+          <h3 id="rRegion"></h3>
+          <p class="chart-caption">Smoothed scenario forecast with a visual uncertainty range.</p>
+        </div>
+        <div class="summary-grid" aria-label="Forecast summary">
+          <div class="summary-card">
+            <span class="summary-label">Average</span>
+            <span class="summary-value" id="avgForecast">--</span>
+          </div>
+          <div class="summary-card">
+            <span class="summary-label">Peak month</span>
+            <span class="summary-value" id="peakForecast">--</span>
+          </div>
+          <div class="summary-card">
+            <span class="summary-label">Trend</span>
+            <span class="summary-value" id="trendForecast">--</span>
+          </div>
+          <div class="summary-card">
+            <span class="summary-label">Reliability</span>
+            <span class="summary-value" id="reliabilityLabel">--</span>
+          </div>
+        </div>
+      </div>
 
-      <div id="validationBox" style="border-radius:8px; padding:10px; margin-top:10px;">
+      <span id="rPred" style="display:none;"></span>
+
+      <div id="validationBox" style="border-radius:8px; margin-top:10px;">
         <div class="val-row" id="valRow">
           <!-- filled dynamically -->
-          <div class="val-item" id="valMAE">MAE: —</div>
-          <div class="val-item" id="valRMSE">RMSE: —</div>
-          <div class="val-item" id="valSMAPE">SMAPE: —</div>
-          <div class="val-item" id="valCORR">Corr: —</div>
-          <div class="val-item" id="valHOLDOUT">Holdout (n_test_rows): —</div>
+          <div class="val-item" id="valMAE">MAE: --</div>
+          <div class="val-item" id="valRMSE">RMSE: --</div>
+          <div class="val-item" id="valSMAPE">SMAPE: --</div>
+          <div class="val-item" id="valCORR">Corr: --</div>
+          <div class="val-item" id="valHOLDOUT">Holdout: --</div>
         </div>
       </div>
 
       <!-- per-region caution displayed near validation metrics -->
       <div id="regionCaution" class="small-muted" style="display:none; margin-top:8px;"></div>
 
-      <canvas id="chart" width="400" height="200"></canvas>
-      <button id="resetZoomBtn" style="margin-top:10px; padding:6px 12px;">Reset Zoom</button>
+      <div class="chart-shell">
+        <canvas id="chart" width="400" height="200"></canvas>
+      </div>
+      <div class="chart-actions">
+        <button id="resetZoomBtn" class="secondary-button">Reset Zoom</button>
+      </div>
     </div>
 
     <div id="map"></div>
@@ -180,62 +462,6 @@
         el.innerHTML = "";
       }
     }
-
-    // try to augment runForecast: after your app.js finishes forecasting it should store the last API response
-    // in window._lastApiResponse (recommended). This code is defensive: it checks for that and falls back.
-    (function augmentRunForecast() {
-      const orig = window.runForecast;
-      // Only wrap if there's an existing runForecast
-      if (typeof orig !== "function") return;
-      window.runForecast = async function(statusEl) {
-        await orig(statusEl);
-        // small delay to give app.js DOM updates time to happen (if it writes metrics to DOM)
-        await new Promise(r => setTimeout(r, 50));
-
-        // 1) preferred: app.js stores the API payload here
-        const resp = window._lastApiResponse || window._lastResponse || null;
-
-        if (resp && resp.validation_metrics) {
-          // server may return validation_metrics object
-          updateValidationBox(resp.validation_metrics);
-        } else if (resp && resp.metrics_summary) {
-          // alternative naming
-          updateValidationBox(resp.metrics_summary);
-        } else {
-          // fallback: try to read metrics from DOM elements that app.js might have inserted
-          // attempt to find SMAPE/MAE values from elements with ids (common patterns)
-          const guess = {};
-          try {
-            const maeEl = document.querySelector("#valMAE") || document.querySelector(".mae") || null;
-            const smapeEl = document.querySelector("#valSMAPE") || document.querySelector(".smape") || null;
-            const corrEl = document.querySelector("#valCORR") || document.querySelector(".corr") || null;
-            const rmseEl = document.querySelector("#valRMSE") || document.querySelector(".rmse") || null;
-            // parse numbers if available
-            if (maeEl && maeEl.textContent.match(/-?\d+(\.\d+)?/)) guess.mae = parseFloat(maeEl.textContent.match(/-?\d+(\.\d+)?/)[0]);
-            if (rmseEl && rmseEl.textContent.match(/-?\d+(\.\d+)?/)) guess.rmse = parseFloat(rmseEl.textContent.match(/-?\d+(\.\d+)?/)[0]);
-            if (smapeEl && smapeEl.textContent.match(/-?\d+(\.\d+)?/)) guess.smape = parseFloat(smapeEl.textContent.match(/-?\d+(\.\d+)?/)[0]);
-            if (corrEl && corrEl.textContent.match(/-?\d+(\.\d+)?/)) guess.corr = parseFloat(corrEl.textContent.match(/-?\d+(\.\d+)?/)[0]);
-          } catch(e) { /* ignore */ }
-
-          // also attempt holdout: maybe app.js sets an element with id "holdout" or similar
-          try {
-            const hEl = document.querySelector("#valHOLDOUT") || document.querySelector(".n_test_rows");
-            if (hEl && hEl.textContent.match(/\d+/)) guess.n_test_rows = parseInt(hEl.textContent.match(/\d+/)[0], 10);
-          } catch(e) { /* ignore */ }
-
-          if (Object.keys(guess).length) updateValidationBox(guess);
-        }
-
-        // update the map with forecast avg if present in DOM
-        try {
-          const region = document.getElementById("region").value;
-          const predsText = document.getElementById("rPred").textContent || "";
-          const preds = predsText.split(",").map(x => Number(x.trim())).filter(Number.isFinite);
-          const avg = preds.length ? preds.reduce((a,b)=>a+b,0)/preds.length : 0;
-          renderWorldMap([{ name: region, value: avg }]);
-        } catch(e) { /* non-fatal */ }
-      };
-    })();
 
     // Map rendering function (kept compact; identical behavior as before)
     async function renderWorldMap(regionData) {

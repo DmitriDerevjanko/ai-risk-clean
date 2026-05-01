@@ -445,7 +445,7 @@ def predict(
         # ---------- FORECAST LOOP ----------
         preds, forecast_dates = [], []
         cur_date = next_month(last_date)
-        noise_amp = float(np.nanstd(series.tail(24))) * 0.2 if len(series) >= 2 else 0.1
+        soft_variation_amp = float(np.nanstd(series.tail(24))) * 0.08 if len(series) >= 2 else 0.0
 
         def predict_from_model(m, X_df_or_arr):
             """Return 1d numpy preds. Accepts DataFrame or array; keeps robustness."""
@@ -555,7 +555,7 @@ def predict(
             y_hat = y_hat * seasonal_wave
             last_obs = float(series.iloc[-1]) if len(series) > 0 else 0.0
             y_hat = 0.7 * y_hat + 0.3 * last_obs
-            y_hat += float(np.random.normal(0, noise_amp))
+            y_hat += soft_variation_amp * math.sin((step + 1) * 0.55 + month_idx * 0.35)
             y_hat = max(y_hat, 0.0)
 
             preds.append(round(y_hat, 2))

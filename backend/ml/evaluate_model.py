@@ -229,12 +229,12 @@ def evaluate_region_extended(region, df):
         # small seasonal / noise / anchoring to last obs
         month_idx = (cur_date.month - 1) % 12
         seasonal_wave = 1 + 0.05 * np.sin(2 * np.pi * month_idx / 12)
-        random_spike = 1.0 + np.random.normal(0.0, 0.05)
+        random_spike = 1.0 + 0.03 * np.sin((step + 1) * 0.55 + month_idx * 0.35)
         y_hat = float(y_hat) * seasonal_wave * random_spike
         # anchor to last observed value to avoid explosion
         y_hat = 0.7 * y_hat + 0.3 * float(hist["incidents_count"].iloc[-1])
         # add small noise
-        y_hat += np.random.normal(0, noise_amp)
+        y_hat += noise_amp * 0.15 * np.sin((step + 1) * 0.75)
         y_hat = max(float(y_hat), 0.0)
 
         # append scalars only
