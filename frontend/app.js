@@ -168,6 +168,8 @@ function renderChart(histPoints, fcPoints, lowerBand, upperBand, boundaryX) {
     },
   };
 
+  const boundaryMs = new Date(boundaryX).getTime();
+
   window._chart = new Chart(ctx, {
     type: "line",
     data: {
@@ -253,6 +255,27 @@ function renderChart(histPoints, fcPoints, lowerBand, upperBand, boundaryX) {
           displayColors: true,
           padding: 12,
           titleColor: "#18202f",
+          filter: (tooltipItem) => {
+            if (tooltipItem.dataset.label !== "Actual incidents") return true;
+            const chart = tooltipItem.chart;
+            const xScale = chart.scales.x;
+            if (!xScale || Number.isNaN(boundaryMs)) return true;
+            let pixelX = chart.tooltip?.caretX;
+            if (pixelX == null) {
+              const active = chart.getActiveElements();
+              if (active.length && active[0].element?.x != null) {
+                pixelX = active[0].element.x;
+              }
+            }
+            if (pixelX == null) return true;
+            const rawX = xScale.getValueForPixel(pixelX);
+            const t =
+              typeof rawX === "number" && Number.isFinite(rawX)
+                ? rawX
+                : new Date(rawX).getTime();
+            if (!Number.isFinite(t)) return true;
+            return t < boundaryMs;
+          },
           callbacks: {
             title: (items) => formatMonthYear(items[0].parsed.x),
             label: (ctx) => `${ctx.dataset.label}: ${compactNumber(ctx.parsed.y)}`,
