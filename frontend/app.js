@@ -255,25 +255,25 @@ function renderChart(histPoints, fcPoints, lowerBand, upperBand, boundaryX) {
           displayColors: true,
           padding: 12,
           titleColor: "#18202f",
-          filter: (tooltipItem) => {
+          // Chart.js calls filter as (element, index, tooltipItemsBeforeFilter, data).
+          // "Actual" uses the nearest *past* point, so its own parsed.x is ~2017 even when
+          // the tooltip title is 2028 — use any forecast-series sibling's parsed.x instead.
+          filter: (tooltipItem, _index, tooltipItems) => {
             if (tooltipItem.dataset.label !== "Actual incidents") return true;
-            const chart = tooltipItem.chart;
-            const xScale = chart.scales.x;
-            if (!xScale || Number.isNaN(boundaryMs)) return true;
-            let pixelX = chart.tooltip?.caretX;
-            if (pixelX == null) {
-              const active = chart.getActiveElements();
-              if (active.length && active[0].element?.x != null) {
-                pixelX = active[0].element.x;
-              }
-            }
-            if (pixelX == null) return true;
-            const rawX = xScale.getValueForPixel(pixelX);
+            if (!Array.isArray(tooltipItems) || !tooltipItems.length) return false;
+            const ref =
+              tooltipItems.find((el) => el.dataset.label === "Scenario forecast") ||
+              tooltipItems.find((el) => el.dataset.label === "Scenario range") ||
+              tooltipItems.find((el) => el.dataset.label === "Range lower");
+            const xref = ref?.parsed?.x;
+            if (xref == null || Number.isNaN(boundaryMs)) return false;
             const t =
-              typeof rawX === "number" && Number.isFinite(rawX)
-                ? rawX
-                : new Date(rawX).getTime();
-            if (!Number.isFinite(t)) return true;
+              xref instanceof Date
+                ? xref.getTime()
+                : typeof xref === "number" && Number.isFinite(xref)
+                  ? xref
+                  : new Date(xref).getTime();
+            if (!Number.isFinite(t)) return false;
             return t < boundaryMs;
           },
           callbacks: {
