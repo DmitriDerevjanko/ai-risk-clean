@@ -15,7 +15,7 @@ services:
       --port 8000
       --log-level debug
     ports:
-      - "9100:8000"
+      - "127.0.0.1:9100:8000"
 
   web:
     image: nginx:1.27-alpine
